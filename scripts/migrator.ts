@@ -41,7 +41,7 @@ Bun.write('wrangler.toml', stripIndent(`
 #:schema node_modules/wrangler/config-schema.json
 name = "${WORKER_NAME}"
 main = "server/src/_worker.ts"
-compatibility_date = "2025-08-29"
+compatibility_date = "2025-08-25"
 compatibility_flags = ["nodejs_compat"]
 # node_compat = true
 
