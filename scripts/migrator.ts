@@ -41,7 +41,7 @@ Bun.write('wrangler.toml', stripIndent(`
 #:schema node_modules/wrangler/config-schema.json
 name = "${WORKER_NAME}"
 main = "server/src/_worker.ts"
-compatibility_date = "2025-08-29"
+compatibility_date = "2024-05-29"
 compatibility_flags = ["nodejs_compat"]
 # node_compat = true
 
@@ -65,7 +65,7 @@ RSS_DESCRIPTION = "${RSS_DESCRIPTION}"
 mode = "smart"
 `))
 
-输入 D1Item = {
+type D1Item = {
     uuid: string,
     name: string,
     version: string,
@@ -75,9 +75,9 @@ mode = "smart"
 const { exitCode, stderr, stdout } = await $`bunx wrangler d1 create ${DB_NAME}`.quiet().nothrow()
 if (exitCode !== 0) {
     if (!stderr.toString().includes('already exists')) {
-        console.error(`Failed 到 create D1 "${DB_NAME}"`)
+        console.error(`Failed to create D1 "${DB_NAME}"`)
         console.error(stripIndent(stdout.toString()))
-        console。log(`----------------------------`)
+        console.log(`----------------------------`)
         console.error(stripIndent(stderr.toString()))
         process.exit(1)
     } else {
@@ -87,17 +87,17 @@ if (exitCode !== 0) {
     console.log(`Created D1 "${DB_NAME}"`)
 }
 console.log(`Searching D1 "${DB_NAME}"`)
-const listJsonString = await $`bunx wrangler d1 list --json`。quiet().text()
+const listJsonString = await $`bunx wrangler d1 list --json`.quiet().text()
 const listJson = JSON.parse(listJsonString) as D1Item[] ?? []
-const existing = listJson.find((x: D1Item) => x。name === DB_NAME)
+const existing = listJson.find((x: D1Item) => x.name === DB_NAME)
 if (existing) {
     console.log(`Found: ${existing.name}:${existing.uuid}`)
     // append to the end of the file
     const configText = stripIndent(`
     [[d1_databases]]
     binding = "DB"
-    database_name = "${existing。name}"
-    database_id = "${existing。uuid}"`)
+    database_name = "${existing.name}"
+    database_id = "${existing.uuid}"`)
     await $`echo ${configText} >> wrangler.toml`.quiet()
     console.log(`Appended to wrangler.toml`)
 }
@@ -111,12 +111,12 @@ const isInfoExistResult = await isInfoExist(typ, DB_NAME);
 try {
     const files = await readdir("./server/sql", { recursive: false })
     const sqlFiles = files
-        。filter(name => name.endsWith('.sql'))
-        。filter(name => {
+        .filter(name => name.endsWith('.sql'))
+        .filter(name => {
             const version = parseInt(name.split('-')[0]);
             return version > migrationVersion;
         })
-        。sort();
+        .sort();
     console.log("migration_version:", migrationVersion, "Migration SQL List: ", sqlFiles)
     for (const file of sqlFiles) {
         await $`bunx wrangler d1 execute ${DB_NAME} --remote --file ./server/sql/${file} -y`
