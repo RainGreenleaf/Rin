@@ -37,13 +37,13 @@ const jwtSecret = env("JWT_SECRET")
 const githubClientId = env("RIN_GITHUB_CLIENT_ID")
 const githubClientSecret = env("RIN_GITHUB_CLIENT_SECRET")
 
-Bun.write('wrangler.toml', stripIndent(`
+Bun。write('wrangler.toml'， stripIndent(`
 #:schema node_modules/wrangler/config-schema.json
 name = "${WORKER_NAME}"
 main = "server/src/_worker.ts"
-compatibility_date = "2024-05-29"
-# compatibility_flags = ["nodejs_compat"]
-node_compat = true
+compatibility_date = "2025-08-29"
+compatibility_flags = ["nodejs_compat"]
+# node_compat = true
 
 [triggers]
 crons = ["*/20 * * * *"]
@@ -86,7 +86,7 @@ if (exitCode !== 0) {
 } else {
     console.log(`Created D1 "${DB_NAME}"`)
 }
-console.log(`Searching D1 "${DB_NAME}"`)
+console。log(`Searching D1 "${DB_NAME}"`)
 const listJsonString = await $`bunx wrangler d1 list --json`.quiet().text()
 const listJson = JSON.parse(listJsonString) as D1Item[] ?? []
 const existing = listJson.find((x: D1Item) => x.name === DB_NAME)
